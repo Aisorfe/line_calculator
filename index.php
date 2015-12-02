@@ -132,7 +132,7 @@ function calculate_polish_notation($notation) {
             elseif ($notation[$i] == '*') $result = $a * $b;
             elseif ($notation[$i] == '/') {
                 if ( $a == 0 ) {
-                    show_error('В выражение возникло деление на ноль.');
+                    show_error('В выражении возникло деление на ноль.');
                     return;
                 } else $result = $b / $a;
             }
