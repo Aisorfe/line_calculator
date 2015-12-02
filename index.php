@@ -35,7 +35,7 @@
 
 <?php
 
-$acceptable_chars = array(" ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "(", ")", "+", "-", "*", "/");
+$acceptable_chars = array(" ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "(", ")", "+", "-", "*", "/", "^");
 
 function calculate($expression) {
         if ( !is_correct_expression($expression) ) {
@@ -61,6 +61,8 @@ function is_correct_expression($expression) {
 
 function spot_priority($operation) {
     switch($operation) {
+        case '^':
+            return 4;
         case '*':
         case '/':
              return 3;
@@ -85,7 +87,7 @@ function get_polish_notation($expression) {
         if ( $expression[$i] == '(' ) {
             $current_op_stack->push($expression[$i]);
         }
-        if ( ($expression[$i] == '-') or ($expression[$i] == '+') or ($expression[$i] == '*') or ($expression[$i] == '/') ) {
+        if ( ($expression[$i] == '-') or ($expression[$i] == '+') or ($expression[$i] == '*') or ($expression[$i] == '/') or ($expression[$i] == '^') ) {
             if ( $current_op_stack->is_empty() ) {
                 $current_op_stack->push($expression[$i]);
             } elseif ( spot_priority($expression[$i]) > spot_priority($current_op_stack->top()) ) {
@@ -124,7 +126,7 @@ function calculate_polish_notation($notation) {
             $calc_stack->push($current_number);
             $current_number = '';
         }
-        if ( ($notation[$i] == '-') or ($notation[$i] == '+') or ($notation[$i] == '*') or ($notation[$i] == '/') ) {
+        if ( ($notation[$i] == '-') or ($notation[$i] == '+') or ($notation[$i] == '*') or ($notation[$i] == '/') or ($notation[$i] == '^') ) {
             $a = $calc_stack->pop();
             $b = $calc_stack->pop();
             if ($notation[$i] == '-') $result = $b - $a;
@@ -136,6 +138,7 @@ function calculate_polish_notation($notation) {
                     return;
                 } else $result = $b / $a;
             }
+            elseif ($notation[$i] == '^') $result = pow($b, $a);
             $calc_stack->push($result);
         }
     }
